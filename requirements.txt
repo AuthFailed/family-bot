@@ -16,3 +16,4 @@ betterlogging~=1.0.0
 adguardhome~=0.7.0
 pytz~=2025.2
 APScheduler~=3.11.0
+marshmallow~=3.26.1
