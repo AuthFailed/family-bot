@@ -77,6 +77,8 @@ class TgBot:
     admin_ids: list[int]
     use_redis: bool
 
+
+
     @staticmethod
     def from_env(env: Env):
         """
@@ -129,6 +131,46 @@ class RedisConfig:
             redis_pass=redis_pass, redis_port=redis_port, redis_host=redis_host
         )
 
+@dataclass
+class Group:
+    """
+    Creates the Group object from environment variables.
+    """
+
+    group_id: int
+    internet_topic: int
+
+    @staticmethod
+    def from_env(env: Env):
+        """
+        Creates the Group object from environment variables.
+        """
+        group_id = env.int("GROUP")
+        internet_topic = env.int("INTERNET_TOPIC")
+        return Group(group_id=group_id, internet_topic=internet_topic)
+
+
+@dataclass
+class Internet:
+    """
+    Creates the Internet object from environment variables.
+    """
+
+    adguard_host: str
+    adguard_port: int
+    adguard_username: str
+    adguard_password: str
+
+    @staticmethod
+    def from_env(env: Env):
+        """
+        Creates the Internet object from environment variables.
+        """
+        adguard_host = env.str("ADGUARD_IP")
+        adguard_port = env.int("ADGUARD_PORT")
+        adguard_username = env.str("ADGUARD_USERNAME")
+        adguard_password = env.str("ADGUARD_PASSWORD")
+        return Internet(adguard_host=adguard_host, adguard_port=adguard_port, adguard_username=adguard_username, adguard_password=adguard_password)
 
 @dataclass
 class Miscellaneous:
@@ -167,6 +209,8 @@ class Config:
     """
 
     tg_bot: TgBot
+    internet: Internet
+    group: Group
     misc: Miscellaneous
     db: Optional[DbConfig] = None
     redis: Optional[RedisConfig] = None
@@ -187,6 +231,8 @@ def load_config(path: str = None) -> Config:
 
     return Config(
         tg_bot=TgBot.from_env(env),
+        internet=Internet.from_env(env),
+        group=Group.from_env(env),
         # db=DbConfig.from_env(env),
         # redis=RedisConfig.from_env(env),
         misc=Miscellaneous(),
